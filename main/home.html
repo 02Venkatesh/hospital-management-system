@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <title>Home</title>
+</head>
+<body>
+    <div class="fc">
+    <header class="header">
+        <div class="logo-container">
+            <img src="CareLink.png" alt="CareLink Logo" class="logo">
+            <span class="site-name">CareLink</span>
+        </div>
+        <nav class="nav">
+        
+        <a href="about.html">About Us</a>
+        <a href="service.html">Services</a>
+        <a href="#apt">Make Appointment</a>
+        <a href="contact.html">Contact</a>
+        <button onclick="openPopup()"><a href="#emergency">Emergency</a></button>
+        <div id="customPopup" class="popup-overlay">
+            <div class="popup-box">
+                <h2>Emergency Assistance</h2>
+                <p>Do you need an <strong>Ambulance</strong> or a <strong>Doctor</strong>?</p>
+                <div class="popup-buttons">
+                    <button onclick="handleSelection('Ambulance')"> Ambulance</button>
+                    <button onclick="handleSelection('Doctor')">Doctor</button>
+                </div>
+                <button class="close-btn" onclick="closePopup()">❌ Cancel</button>
+            </div>
+        </div>
+        <script>
+            function openPopup() {
+                document.getElementById("customPopup").style.display = "flex";  // Show pop-up ONLY when button is clicked
+            }
+            
+            function closePopup() {
+                document.getElementById("customPopup").style.display = "none";  // Hide pop-up
+            }
+            
+            function handleSelection(type) {
+  selectedEmergencyType = type;
+  closePopup(); // Close the popup after selection
+  sendEmergencyRequest(); // Send the emergency request to the server
+}
+
+function sendEmergencyRequest() {
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser.");
+    return;
+  }
+
+  if (!selectedEmergencyType) {
+    alert("Please select an emergency type.");
+    return;
+  }
+
+  // Get the current location of the user
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const location = `${position.coords.latitude}, ${position.coords.longitude}`;
+
+      // Data to be sent to the backend
+      const emergencyData = {
+        requestType: selectedEmergencyType,
+        location: location
+      };
+
+      // Send the emergency data to the backend via POST request
+      fetch("/api/emergency", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(emergencyData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message); // Display success or failure message
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("Failed to send emergency request.");
+      });
+    },
+    (error) => {
+      alert("Unable to get your location.");
+      console.error("Geolocation error:", error);
+    }
+  );
+}
+            
+            /* ✅ Prevent the pop-up from opening on page load */
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("customPopup").style.display = "none";
+            });
+            </script>
+            
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <div class="container">
+              <div class="content">
+                <h1>Find Nearest <br> <span>Hospital</span></h1>
+              </div>
+              <div class="box">
+                <p class="title-lg card-text">
+                  Search doctors, clinics, hospitals, etc.
+                </p>
+        
+                <div class="wrapper">
+                  <div class="input-wrapper title-lg">
+                    <input type="text" name="location" id="location-input" placeholder="Location" class="input-field">
+                  </div>
+        
+                  <button class="btn has-before" id="find-button">
+                    <span class="span title-md">Find</span>
+                    <i class='bx bx-search-alt'></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        
+          <!-- Map Container -->
+          <div id="map" style="width: 100%; height: 500px; margin-top: 20px;"></div>
+           <!-- Script to load Google Maps API -->
+  <script src="map.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEueN5RSZepmHj-z_Bc7hpJ-625ATt4ZQ&libraries=places&callback=initMap" async defer></script>
+        
+
+        <section >
+          <div class="wbox">
+            <div class="s1">
+              <span class="emoji">🚑 </span>
+              <h2>Emergency</h2>
+              <p>Immediate medical assistance with one click</p>
+            </div>
+            <div class="s2">
+              <span class="emoji">📅</span>
+              <h2>Appointments</h2>
+              <p>Effortlessly manage your medical schedule online</p>
+            </div>
+            <div class="s3">
+              <span class="emoji">🏥</span>
+              <h2>Hospitals</h2>
+              <p>Find hospitals by price and location for better decisions</p>
+            </div>
+            <div class="s4">
+              <span class="emoji">💬</span>
+              <h2>Reviews</h2>
+              <p>Read public reviews for an informed decision</p>
+            </div>
+            <span id="apt"></span>
+          </div>
+        </section>
+        <script>document.addEventListener("DOMContentLoaded", function () {
+            const wbox = document.querySelector(".wbox");
+        
+            function checkVisibility() {
+                const rect = wbox.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.75) {
+                    wbox.classList.add("show");
+                    window.removeEventListener("scroll", checkVisibility);
+                }
+            }
+        
+            window.addEventListener("scroll", checkVisibility);
+            checkVisibility(); // Run once in case it's already visible
+        });</script>
+        
+        
+        <section>
+            <div class="apt">
+                <br>
+                <br>
+                <h2 >Book an Appointment</h2>
+                <form id="appointment-form" onsubmit="submitAppointment(event)">
+                <div class="apt-box">
+                    <div class="cheat1">
+                        <input type="text" id="first-name" name="first-name" placeholder="First Name" class="apt-input" required>
+                        <input type="text" id="last-name" name="last-name" placeholder="Last Name" class="apt-input">
+                    </div>
+                    <div class="cheat2">
+                        <input type="tel" id="phone" name="phone" placeholder="Phone Number" class="apt-input" pattern="[0-9]{10}" required>
+                        <input type="email" id="email" name="email" placeholder="Email" class="apt-input" required>
+                    </div>
+                    <div class="cheat3">
+                        <select id="problem" class="apt-input" onchange="filterHospitals()">
+                            <option value="">Health Concern</option>
+                            <option value="cardiology">Heart Problem</option>
+                            <option value="orthopedics">Bone Injury</option>
+                            <option value="neurology">Brain/Nerve Issue</option>
+                            <option value="pulmonology">Lung Issue</option>
+                            <option value="dentistry">Dental Issue</option>
+                        </select>
+                        <select id="hospital" class="apt-input" onchange="filterDoctors()">
+                            <option value="">Select Hospital</option>
+                        </select>
+                    </div>
+                    <div class="cheat4">
+                    <select id="doctor" class="apt-input">
+                        <option value="">Select Doctor</option>
+                    </select>
+                    <select id="rating" class="apt-input" onchange="filterHospitals()">
+                        <option value="">Minimum Rating</option>
+                        <option value="1">⭐</option>
+                        <option value="2">⭐⭐</option>
+                        <option value="3">⭐⭐⭐</option>
+                        <option value="4">⭐⭐⭐⭐</option>
+                        <option value="5">⭐⭐⭐⭐⭐</option>
+                    </select>
+                </div>
+                    <input type="datetime-local" id="date-time" class="apt-input" required>
+        
+                    <button class="apt-btn" type="submit">Book Appointment</button>
+                </div>
+            </form>
+            </div>
+        </section>
+        
+        <script>
+            const hospitals = [
+                { 
+                    name: "City Hospital",
+                    specialties: { 
+                        cardiology: [{ name: "Dr. Smith", rating: 5 }, { name: "Dr. Johnson", rating: 4 }], 
+                        orthopedics: [{ name: "Dr. White", rating: 3 }, { name: "Dr. Clark", rating: 5 }], 
+                        neurology: [{ name: "Dr. Watson", rating: 4 }] 
+                    }
+                },
+                { 
+                    name: "HeartCare Center", 
+                    specialties: { 
+                        cardiology: [{ name: "Dr. Adams", rating: 3 }, { name: "Dr. Brown", rating: 5 }], 
+                        pulmonology: [{ name: "Dr. Perry", rating: 4 }] 
+                    }
+                },
+                { 
+                    name: "Ortho Clinic", 
+                    specialties: { 
+                        orthopedics: [{ name: "Dr. Green", rating: 5 }, { name: "Dr. Black", rating: 4 }], 
+                        pediatrics: [{ name: "Dr. Lewis", rating: 3 }] 
+                    }
+                },
+                { 
+                    name: "BrainCare Hospital", 
+                    specialties: { 
+                        neurology: [{ name: "Dr. Watson", rating: 5 }, { name: "Dr. Foster", rating: 3 }], 
+                        dermatology: [{ name: "Dr. Hill", rating: 4 }] 
+                    }
+                },
+                { 
+                    name: "Vision Care", 
+                    specialties: { 
+                        ophthalmology: [{ name: "Dr. Blue", rating: 3 }, { name: "Dr. Gray", rating: 5 }], 
+                        dentistry: [{ name: "Dr. Garcia", rating: 4 }] 
+                    }
+                },
+                { 
+                    name: "LungCare Hospital", 
+                    specialties: { 
+                        pulmonology: [{ name: "Dr. Wilson", rating: 4 }, { name: "Dr. Carter", rating: 5 }], 
+                        general_medicine: [{ name: "Dr. Nelson", rating: 3 }] 
+                    }
+                },
+                { 
+                    name: "Smile Dental", 
+                    specialties: { 
+                        dentistry: [{ name: "Dr. Hernandez", rating: 5 }, { name: "Dr. Martin", rating: 3 }], 
+                        dermatology: [{ name: "Dr. Taylor", rating: 4 }] 
+                    }
+                },
+                { 
+                    name: "MedLife Clinic", 
+                    specialties: { 
+                        general_medicine: [{ name: "Dr. Brown", rating: 4 }, { name: "Dr. Lopez", rating: 3 }], 
+                        gastroenterology: [{ name: "Dr. Campbell", rating: 5 }] 
+                    }
+                }
+            ];
+        
+            function filterHospitals() {
+                const problem = document.getElementById("problem").value.toLowerCase();
+                const minRating = parseInt(document.getElementById("rating").value);
+                const hospitalSelect = document.getElementById("hospital");
+                hospitalSelect.innerHTML = `<option value="">Select Hospital</option>`; // Reset dropdown
+        
+                if (problem) {
+                    hospitals.forEach(hospital => {
+                        if (hospital.specialties[problem]) {
+                            const doctors = hospital.specialties[problem].filter(doctor => !minRating || doctor.rating >= minRating);
+                            if (doctors.length > 0) {
+                                const option = document.createElement("option");
+                                option.value = hospital.name;
+                                option.textContent = hospital.name;
+                                hospitalSelect.appendChild(option);
+                            }
+                        }
+                    });
+                }
+                filterDoctors(); // Reset doctor list
+            }
+        
+            function filterDoctors() {
+    const problem = document.getElementById("problem").value.toLowerCase();
+    const hospital = document.getElementById("hospital").value;
+    const minRating = parseInt(document.getElementById("rating").value);
+    const doctorSelect = document.getElementById("doctor");
+    doctorSelect.innerHTML = `<option value="">Select Doctor</option>`; // Reset dropdown
+
+    if (problem && hospital) {
+        const selectedHospital = hospitals.find(h => h.name === hospital);
+        if (selectedHospital && selectedHospital.specialties[problem]) {
+            selectedHospital.specialties[problem]
+                .filter(doctor => !minRating || doctor.rating >= minRating)
+                .forEach(doctor => {
+                    const option = document.createElement("option");
+                    option.value = doctor.name;
+                    option.textContent = `${doctor.name} (${'⭐'.repeat(doctor.rating)})`; // Replace number with stars
+                    doctorSelect.appendChild(option);
+                });
+        }
+    }
+}
+
+        
+function submitAppointment(event) {
+    event.preventDefault();
+    
+    const data = {
+        firstName: document.getElementById("first-name").value,
+        lastName: document.getElementById("last-name").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        problem: document.getElementById("problem").value,
+        hospital: document.getElementById("hospital").value,
+        doctor: document.getElementById("doctor").value,
+        dateTime: document.getElementById("date-time").value
+    };
+
+    if (Object.values(data).some(val => val === "")) {
+        alert("Please fill in all details!");
+        return;
+    }
+
+    fetch("/api/book-appointment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(response => {
+        if (response.success) {
+            alert("Appointment booked successfully!");
+        } else {
+            alert(response.message || "Error booking appointment.");
+        }
+    })
+    .catch(err => console.error("Error:", err));
+}
+
+        </script>
+
+
+        <!-- REVIEW -->
+         <div class="rev">
+            <h2>Testimonials</h2>
+            <div class="rev-box">
+                <div class="rb1 review-box"></div>
+                <div class="rb2 review-box"></div>
+                <div class="rb3 review-box"></div>
+            </div>
+        </div>
+        
+        <script>
+        const reviews = [
+    { img: "c8.png", stars: "⭐⭐⭐⭐⭐", text: '"The app is super intuitive! I found a top-rated neurologist in minutes. No more waiting on long calls!" — Sophia R.' },
+    { img: "c1.png", stars: "⭐⭐⭐⭐", text: '"The UI is clean and modern. Booking my dental checkup was effortless!" — Daniel K.' },
+    { img: "c3.png", stars: "⭐⭐⭐⭐⭐", text: '"I needed a cardiologist urgently, and this platform helped me instantly! Absolute game-changer!" — Michael D.' },
+    { img: "c9.png", stars: "⭐⭐⭐⭐⭐", text: '"Super fast and reliable! Found a doctor that matched my schedule easily." — Emma L.' },
+    { img: "c5.png", stars: "⭐⭐⭐⭐⭐", text: '"Lifesaver! Got an appointment instantly." — George F.' },
+    { img: "c7.png", stars: "⭐⭐⭐⭐", text: '"Smooth experience, found a pulmonologist very quickly!" — Aisha N.' },
+    { img: "c4.png", stars: "⭐⭐⭐⭐⭐", text: '"The hospital finder helped me compare ratings before choosing the right place!" — Kevin P.' },
+    { img: "c2.png", stars: "⭐⭐⭐⭐⭐", text: '"Great service! I found a great ophthalmologist in seconds." — Olivia W.' },
+    { img: "c6.png", stars: "⭐⭐⭐⭐⭐", text: '"Filtering by ratings made choosing a doctor so easy!" — David C.' }
+];
+
+let reviewIndex = 0;
+
+function updateReviews() {
+    const reviewBoxes = [document.querySelector(".rb1"), document.querySelector(".rb2"), document.querySelector(".rb3")];
+
+    reviewBoxes.forEach((box, i) => {
+        const currentReview = reviews[(reviewIndex + i) % reviews.length];
+        box.classList.remove("fade-in"); 
+
+        setTimeout(() => {
+            box.innerHTML = `
+                <img src="${currentReview.img}" alt="Reviewer" class="review-img">
+                <div class="stars">${currentReview.stars}</div>
+                <p class="review-text">${currentReview.text}</p>
+            `;
+            box.classList.add("fade-in");
+        }, 300);
+    });
+
+    reviewIndex = (reviewIndex + 3) % reviews.length; // Move by 3 for the next set
+}
+
+setInterval(updateReviews, 5000);
+updateReviews();
+
+
+        </script>
+        </div>
+    </main>
+    <footer class="footer">
+        <hr style="margin-bottom: 20px; border-color:rgba(15, 15, 15, 0.724);">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>Your trusted healthcare partner, connecting you with top hospitals and doctors effortlessly.</p>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Appointments</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Disclaimer</a></li>
+                </ul>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class='bx bx-map'></i> 123 Health St, Wellness City</p>
+                <p><i class='bx bx-envelope'></i> support@CareLink.com</p>
+                <p><i class='bx bx-phone'></i> +1 (234) 567-890</p>
+            </div>
+        </div>
+            <p style="color: rgba(15, 15, 15, 0.724)">© 2025 CareLink. All Rights Reserved.</p>
+        
+    </footer>
+    <script>
+      
+function sendEmergencyRequest(requestType, userLocation) {
+  const token = localStorage.getItem("token");
+  const location = `${userLocation.lat()}, ${userLocation.lng()}`;
+
+  fetch("/api/emergency", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      requestType: requestType,
+      token: token,
+      location: location,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      alert(data.message || "Emergency request submitted.");
+      closePopup();
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Failed to send emergency request.");
+    });
+}
+
+function handleSelection(requestType) {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const userLocation = new google.maps.LatLng(
+          position.coords.latitude,
+          position.coords.longitude
+        );
+        map.setCenter(userLocation);
+
+        if (userMarker) {
+          userMarker.setPosition(userLocation);
+        } else {
+          userMarker = new google.maps.Marker({
+            map: map,
+            position: userLocation,
+            title: "Your Location",
+            icon: {
+              url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+            },
+          });
+        }
+
+        sendEmergencyRequest(requestType, userLocation);
+        searchNearbyHospitals(userLocation);
+      },
+      function () {
+        alert("Error: The Geolocation service failed.");
+      }
+    );
+  } else {
+    alert("Error: Your browser doesn't support geolocation.");
+  }
+}
+    </script>
+    
+</body>
+</html>

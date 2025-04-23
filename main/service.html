@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="clr">
+    <header class="header">
+        <div class="logo-container">
+            <img src="CareLink.png" alt="CareLink Logo" class="logo">
+            <span class="site-name">CareLink</span>
+        </div>
+        <nav class="nav">
+
+        <a href="home.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="home.html#apt">Make Appointment</a>
+        <a href="contact.html">Contact</a>
+        <button onclick="openPopup()"><a href="#emergency">Emergency</a></button>
+        <div id="customPopup" class="popup-overlay">
+            <div class="popup-box">
+                <h2>Emergency Assistance</h2>
+                <p>Do you need an <strong>Ambulance</strong> or a <strong>Doctor</strong>?</p>
+                <div class="popup-buttons">
+                    <button onclick="handleSelection('Ambulance')"> Ambulance</button>
+                    <button onclick="handleSelection('Doctor')"> Doctor</button>
+                </div>
+                <button class="close-btn" onclick="closePopup()">❌ Cancel</button>
+            </div>
+        </div>
+        <script>
+            function openPopup() {
+                document.getElementById("customPopup").style.display = "flex";  // Show pop-up ONLY when button is clicked
+            }
+            
+            function closePopup() {
+                document.getElementById("customPopup").style.display = "none";  // Hide pop-up
+            }
+            
+            function handleSelection(choice) {
+                alert(`You selected: ${choice}. Redirecting...`);
+                closePopup();
+            }
+            
+            /* ✅ Prevent the pop-up from opening on page load */
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("customPopup").style.display = "none";
+            });
+            </script>
+            
+        </nav>
+    </header>
+        
+        <section class="services">
+            <h1 class="sh1">Our Services</h1>
+            <div class="services-container1">
+                <div class="service-box">
+                    <img src="i1.png" alt="Consultation">
+                    <h3>Online Consultation</h3>
+                    <p>Connect with top doctors from anywhere.</p>
+                </div>
+                <div class="service-box">
+                    <img src="i2.png" alt="Emergency Care">
+                    <h3>Ambulance Services</h3>
+                    <p>Quick ambulance dispatch for emergencies.</p>
+                </div>
+                <div class="service-box">
+                    <img src="i3.png" alt="Lab Tests">
+                    <h3>Diagnostic Tests</h3>
+                    <p>Book lab tests and get accurate reports online.</p>
+                </div>
+            </div>
+            <div class="services-container2">
+                <div class="service-box">
+                    <img src="i4.png" alt="Pharmacy">
+                    <h3>Doctor Home Visit</h3>
+                    <p>Arrange a doctor's visit to your home for emergency care and medical checkups.</p>
+                </div>
+                <div class="service-box">
+                    <img src="i5.png" alt="Surgery">
+                    <h3>Health Insurance Assistance</h3>
+                    <p>Find the best health insurance plans for financial security in medical emergencies.</p>
+                </div>
+                <div class="service-box">
+                    <img src="i6.png" alt="Health Packages">
+                    <h3>Health Packages</h3>
+                    <p>Comprehensive health check-ups for all ages.</p>
+                </div>
+            </div>
+        </section>
+</body>
+</html>

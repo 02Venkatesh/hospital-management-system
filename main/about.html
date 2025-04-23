@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="clr">
+    <header class="header">
+        <div class="logo-container">
+            <img src="CareLink.png" alt="CareLink Logo" class="logo">
+            <span class="site-name">CareLink</span>
+        </div>
+        <nav class="nav">
+        
+        <a href="home.html">Home</a>
+        <a href="service.html">Services</a>
+        <a href="home.html#apt">Make Appointment</a>
+        <a href="contact.html">Contact</a>
+        <button onclick="openPopup()"><a href="#emergency">Emergency</a></button>
+        <div id="customPopup" class="popup-overlay">
+            <div class="popup-box">
+                <h2>Emergency Assistance</h2>
+                <p>Do you need an <strong>Ambulance</strong> or a <strong>Doctor</strong>?</p>
+                <div class="popup-buttons">
+                    <button onclick="handleSelection('Ambulance')">Ambulance</button>
+                    <button onclick="handleSelection('Doctor')">Doctor</button>
+                </div>
+                <button class="close-btn" onclick="closePopup()">❌ Cancel</button>
+            </div>
+        </div>
+        <script>
+            function openPopup() {
+                document.getElementById("customPopup").style.display = "flex";  // Show pop-up ONLY when button is clicked
+            }
+            
+            function closePopup() {
+                document.getElementById("customPopup").style.display = "none";  // Hide pop-up
+            }
+            
+            function handleSelection(choice) {
+                alert(`You selected: ${choice}. Redirecting...`);
+                closePopup();
+            }
+            
+            /* ✅ Prevent the pop-up from opening on page load */
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("customPopup").style.display = "none";
+            });
+            </script>
+            
+        </nav>
+    </header>
+    <main>
+        <div class="overlap">
+        <div class="imgg">
+        <img alt="about-bg" src="about-bg.jpg">
+        </div>
+        <h1 class="abt slide-in">About Us</h1>
+        <div>
+            <p class="abt-cont slide-in">
+                Welcome to <strong>CareLink</strong>, where finding quality healthcare is made simple and stress-free. Our mission is to connect people with top-rated hospitals, doctors, and medical facilities, ensuring they receive the best care suited to their needs—all in just a few clicks.
+            </p>
+        </div>
+        <div class="floating-icons">
+            <div class="icon">🩺</div>
+            <div class="icon">🏥</div>
+            <div class="icon">💊</div>
+            <div class="icon">🩹</div>
+        </div>
+        
+        
+        <h1 class="wwa slide-in right">Who We Are</h1>
+        <div>
+            <p class="abt-cont1 slide-in right">
+                We are a dedicated team of professionals passionate about bridging the gap between patients and healthcare providers. By leveraging advanced technology, we make it easier for individuals to find, compare, and book medical services effortlessly.
+            </p>
+        </div>
+        <div class="anime">
+            <img alt="ab1" src="ab2.jpg">
+            <img alt="ab2" src="ab1.jpg">
+            <img alt="ab3" src="ab3.jpg">
+            <img alt="ab4" src="ab4.png">
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const slideElements = document.querySelectorAll(".slide-in");
+            
+                function checkVisibility() {
+                    slideElements.forEach((element) => {
+                        const rect = element.getBoundingClientRect();
+                        if (rect.top < window.innerHeight * 0.75) {
+                            element.classList.add("show");
+                        }
+                    });
+                }
+            
+                window.addEventListener("scroll", checkVisibility);
+                checkVisibility(); // Run once in case already in view
+            });
+            </script>
+            
+<section class="new-clr">
+<div class="mission">
+    <h1>Our Mission</h1>
+    <div class="mission1">
+        <div class="feature">
+            <img src="m1.png" alt="Search Doctors">
+            <h3>Simplified Healthcare Access</h3>
+            <p>Easily find doctors, hospitals, and clinics based on your needs.</p>
+        </div>
+    
+        <div class="feature str">
+            <img src="m2.png" alt="Ratings & Reviews">
+            <h3>Quality & <span class="nowrap">Transparency</span></h3>
+            <p>Compare ratings, reviews, and services to make informed decisions.</p>
+        </div>
+    
+        <div class="feature">
+            <img src="m4.webp" alt="Quick Booking">
+            <h3>Fast & Hassle-Free Bookings</h3>
+            <p>No more long waiting times—schedule appointments instantly.</p>
+        </div>
+    </div>
+    <div class="mission2">
+        <div class="feature">
+            <img src="m3.png" alt="Location Search">
+            <h3>Smart Location-Based Search</h3>
+            <p>Discover the best medical facilities near you.</p>
+        </div>
+        <div class="feature">
+            <img src="m6.png" alt="Location Search">
+            <h3> Inclusive & Accessible Care</h3>
+            <p>Ensuring healthcare reaches everyone, anytime, anywhere.</p>
+        </div>
+    
+        <div class="feature">
+            <img src="m5.png" alt="Real Patient Reviews">
+            <h3>Real Reviews from Real Patients</h3>
+            <p>Make correct decisions with confidence.</p>
+        </div>
+    </div>
+    </div>
+   </section>
+
+ </div>
+    </main>
+    <footer>
+        <section class="call">
+            <div class="cta-section">
+                <h1 class="typing-text">Empowering Healthcare Access for All!</h1>
+                <p>At <strong>CareLink</strong>, we make healthcare convenient, transparent, and accessible to everyone.</p>
+                <a href="home.html"><button class="cta-button">📍 Start Your Search Today! 🚀</button></a>
+            </div>
+           </section>
+            <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const ctaSection = document.querySelector(".cta-section");
+        
+                function checkVisibility() {
+                    const rect = ctaSection.getBoundingClientRect();
+                    if (rect.top < window.innerHeight * 0.75) {
+                        ctaSection.classList.add("show");
+                        window.removeEventListener("scroll", checkVisibility);
+                    }
+                }
+        
+                window.addEventListener("scroll", checkVisibility);
+                checkVisibility(); // Run once in case already in view
+            });
+        </script>
+    </footer>
+</body>
+</html>
